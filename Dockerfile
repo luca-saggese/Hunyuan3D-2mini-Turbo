@@ -52,7 +52,7 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     bash compile_mesh_painter.sh
 
 # Ora copia il resto del codice (non invalida il caching delle dipendenze)
-COPY . /app
+COPY --exclude=hy3dgen . /app
 
 # Espone la porta per Gradio
 EXPOSE 7860 
