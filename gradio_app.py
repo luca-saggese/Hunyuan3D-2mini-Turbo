@@ -455,19 +455,8 @@ def build_app():
                                                     label='Target Face Number')
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
-                            #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
-                            #file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
-                            file_export = gr.File(visible=False, label="Download")
-                            # download_btn = gr.Button("Download", variant="primary")
-    
-                            # # Componente File nascosto (visibile solo dopo il click)
-                            # file_export = gr.File(visible=False, label="Download")
-                            
-                            # # Colleghiamo il pulsante alla funzione che genera il file
-                            # download_btn.click(
-                            #     fn=generate_file,
-                            #     outputs=file_output
-                            # )
+                        with gr.Row():
+                            file_export = gr.File(visible=False, label="File")
                 with gr.Group():
                     file_out = gr.File(label="File", visible=False)
                     file_out2 = gr.File(label="File", visible=False)
@@ -543,8 +532,8 @@ def build_app():
                      gr.update(interactive=False)),
             outputs=[file_out, export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: gr.update(selected='gen_mesh_panel'),
-            outputs=[tabs_output],
+            lambda: (gr.update(visible=True),gr.update(selected='gen_mesh_panel')),
+            outputs=[file_out, tabs_output],
         )
 
         btn_all.click(
@@ -570,8 +559,8 @@ def build_app():
                      gr.update(interactive=False)),
             outputs=[file_out, file_out2, export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: gr.update(selected='gen_mesh_panel'),
-            outputs=[tabs_output],
+            lambda: (gr.update(visible=True), gr.update(visible=True), gr.update(selected='gen_mesh_panel')),
+            outputs=[file_out, file_out2, tabs_output],
         )
 
         def on_gen_mode_change(value):
