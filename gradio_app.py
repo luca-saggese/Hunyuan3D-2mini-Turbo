@@ -411,9 +411,7 @@ def build_app():
                                         visible=HAS_TEXTUREGEN,
                                         min_width=100)
 
-                with gr.Group():
-                    file_out = gr.File(label="File", visible=False)
-                    file_out2 = gr.File(label="File", visible=False)
+
 
                 with gr.Tabs(selected='tab_options' if TURBO_MODE else 'tab_export'):
                     with gr.Tab("Options", id='tab_options', visible=TURBO_MODE):
@@ -457,9 +455,11 @@ def build_app():
                                                     label='Target Face Number')
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
-                            #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
-                            #file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
-                            file_export = gr.outputs.File(label="Download", type="file")
+                        with gr.Row():
+                            file_export = gr.File(visible=False, label="File")
+                with gr.Group():
+                    file_out = gr.File(label="File", visible=False)
+                    file_out2 = gr.File(label="File", visible=False)
 
 
             with gr.Column(scale=6):
@@ -532,7 +532,7 @@ def build_app():
                      gr.update(interactive=False)),
             outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: gr.update(selected='gen_mesh_panel'),
+            lambda: (gr.update(selected='gen_mesh_panel')),
             outputs=[tabs_output],
         )
 
@@ -559,7 +559,7 @@ def build_app():
                      gr.update(interactive=False)),
             outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: gr.update(selected='gen_mesh_panel'),
+            lambda: (gr.update(selected='gen_mesh_panel')),
             outputs=[tabs_output],
         )
 
@@ -590,7 +590,7 @@ def build_app():
             print(f'exporting {file_out}')
             print(f'reduce face to {target_face_num}')
             if export_texture:
-                mesh = trimesh.load(file_out2.name, file_type=file_type)
+                mesh = trimesh.load(file_out2.name, file_type='glb')
                 save_folder = gen_save_folder()
                 path = export_mesh(mesh, save_folder, textured=True, type=file_type)
 
@@ -600,7 +600,7 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=True)
             else:
-                mesh = trimesh.load(file_out.name, file_type=file_type)
+                mesh = trimesh.load(file_out.name, file_type='glb')
                 mesh = floater_remove_worker(mesh)
                 mesh = degenerate_face_remove_worker(mesh)
                 if reduce_face:
