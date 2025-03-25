@@ -27,6 +27,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uuid
 
+
 from hy3dgen.shapegen.utils import logger
 
 MAX_SEED = 1e7
@@ -451,7 +452,7 @@ def build_app():
                             reduce_face = gr.Checkbox(label='Simplify Mesh', value=False, min_width=100)
                             export_texture = gr.Checkbox(label='Include Texture', value=False,
                                                          visible=False, min_width=100)
-                        target_face_num = gr.Slider(maximum=1000000, minimum=100, value=10000,
+                        target_face_num = gr.Slider(maximum=5000000, minimum=100, value=40000,
                                                     label='Target Face Number')
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
