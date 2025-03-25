@@ -412,8 +412,8 @@ def build_app():
                                         min_width=100)
 
                 with gr.Group():
-                    file_out = gr.File(label="File", visible=True)
-                    file_out2 = gr.File(label="File", visible=True)
+                    file_out = gr.File(label="File", visible=False)
+                    file_out2 = gr.File(label="File", visible=False)
 
                 with gr.Tabs(selected='tab_options' if TURBO_MODE else 'tab_export'):
                     with gr.Tab("Options", id='tab_options', visible=TURBO_MODE):
@@ -538,9 +538,9 @@ def build_app():
             ],
             outputs=[file_out, html_gen_mesh, stats, seed]
         ).then(
-            lambda: (gr.update(visible=True), gr.update(interactive=True), gr.update(interactive=True),
+            lambda: (gr.update(visible=True), gr.update(visible=False, value=False), gr.update(interactive=True), gr.update(interactive=True),
                      gr.update(interactive=False)),
-            outputs=[export_texture, reduce_face, confirm_export, file_export],
+            outputs=[file_out, export_texture, reduce_face, confirm_export, file_export],
         ).then(
             lambda: gr.update(selected='gen_mesh_panel'),
             outputs=[tabs_output],
@@ -565,9 +565,9 @@ def build_app():
             ],
             outputs=[file_out, file_out2, html_gen_mesh, stats, seed]
         ).then(
-            lambda: (gr.update(visible=True), gr.update(visible=True), gr.update(interactive=True),
+            lambda: (gr.update(visible=True), gr.update(visible=True), gr.update(visible=True, value=True), gr.update(interactive=False), gr.update(interactive=True),
                      gr.update(interactive=False)),
-            outputs=[export_texture, reduce_face, confirm_export, file_export],
+            outputs=[file_out, file_out2, export_texture, reduce_face, confirm_export, file_export],
         ).then(
             lambda: gr.update(selected='gen_mesh_panel'),
             outputs=[tabs_output],
