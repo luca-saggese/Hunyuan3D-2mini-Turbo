@@ -255,7 +255,7 @@ def _gen_shape(
 
     generator = torch.Generator()
     generator = generator.manual_seed(int(seed))
-    i23d_worker = load_i23d_worker()
+    #i23d_worker = load_i23d_worker()
     outputs = i23d_worker(
         image=image,
         num_inference_steps=steps,
