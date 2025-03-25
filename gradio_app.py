@@ -26,23 +26,21 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uuid
-from mmgp import offload
 
 from hy3dgen.shapegen.utils import logger
 
 MAX_SEED = 1e7
 
-
 if False:
     import os
     import spaces
-import subprocess
-    # import sys
-import shlex
-print("cd /home/user/app/hy3dgen/texgen/differentiable_renderer/ && bash compile_mesh_painter.sh")
-os.system("cd /home/user/app/hy3dgen/texgen/differentiable_renderer/ && bash compile_mesh_painter.sh")
-print('install custom')
-subprocess.run(shlex.split("pip install custom_rasterizer-0.1-cp310-cp310-linux_x86_64.whl"), check=True)
+    import subprocess
+    import sys
+    import shlex
+    print("cd /home/user/app/hy3dgen/texgen/differentiable_renderer/ && bash compile_mesh_painter.sh")
+    os.system("cd /home/user/app/hy3dgen/texgen/differentiable_renderer/ && bash compile_mesh_painter.sh")
+    print('install custom')
+    subprocess.run(shlex.split("pip install custom_rasterizer-0.1-cp310-cp310-linux_x86_64.whl"), check=True)
 
 
 def get_example_img_list():
@@ -387,7 +385,7 @@ def build_app():
             with gr.Column(scale=3):
                 with gr.Tabs(selected='tab_img_prompt') as tabs_prompt:
                     with gr.Tab('Image Prompt', id='tab_img_prompt', visible=not MV_MODE) as tab_ip:
-                        image = gr.Image(label='Image', type='pil', image_mode='RGBA', height=512)
+                        image = gr.Image(label='Image', type='pil', image_mode='RGBA', height=290)
 
                     with gr.Tab('Text Prompt', id='tab_txt_prompt', visible=HAS_T2I and not MV_MODE) as tab_tp:
                         caption = gr.Textbox(label='Text Prompt',
@@ -413,7 +411,9 @@ def build_app():
                                         visible=HAS_TEXTUREGEN,
                                         min_width=100)
 
-
+                with gr.Group():
+                    file_out = gr.File(label="File", visible=False)
+                    file_out2 = gr.File(label="File", visible=False)
 
                 with gr.Tabs(selected='tab_options' if TURBO_MODE else 'tab_export'):
                     with gr.Tab("Options", id='tab_options', visible=TURBO_MODE):
@@ -453,15 +453,13 @@ def build_app():
                             reduce_face = gr.Checkbox(label='Simplify Mesh', value=False, min_width=100)
                             export_texture = gr.Checkbox(label='Include Texture', value=False,
                                                          visible=False, min_width=100)
-                        target_face_num = gr.Slider(maximum=5000000, minimum=100, value=40000,
+                        target_face_num = gr.Slider(maximum=1000000, minimum=100, value=10000,
                                                     label='Target Face Number')
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
-                        with gr.Row():
-                            file_export = gr.File(visible=False, label="File")
-                with gr.Group():
-                    file_out = gr.File(label="File", visible=False)
-                    file_out2 = gr.File(label="File", visible=False)
+                            #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
+                            #file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
+                            file_export = gr.outputs.File(label="Download", type="file")
 
 
             with gr.Column(scale=6):
@@ -534,7 +532,7 @@ def build_app():
                      gr.update(interactive=False)),
             outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: (gr.update(selected='gen_mesh_panel')),
+            lambda: gr.update(selected='gen_mesh_panel'),
             outputs=[tabs_output],
         )
 
@@ -561,7 +559,7 @@ def build_app():
                      gr.update(interactive=False)),
             outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: (gr.update(selected='gen_mesh_panel')),
+            lambda: gr.update(selected='gen_mesh_panel'),
             outputs=[tabs_output],
         )
 
@@ -592,7 +590,7 @@ def build_app():
             print(f'exporting {file_out}')
             print(f'reduce face to {target_face_num}')
             if export_texture:
-                mesh = trimesh.load(file_out2.name, file_type='glb')
+                mesh = trimesh.load(file_out2.name, file_type=file_type)
                 save_folder = gen_save_folder()
                 path = export_mesh(mesh, save_folder, textured=True, type=file_type)
 
@@ -602,7 +600,7 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=True)
             else:
-                mesh = trimesh.load(file_out.name, file_type='glb')
+                mesh = trimesh.load(file_out.name, file_type=file_type)
                 mesh = floater_remove_worker(mesh)
                 mesh = degenerate_face_remove_worker(mesh)
                 if reduce_face:
@@ -648,7 +646,6 @@ if __name__ == '__main__':
     parser.add_argument('--enable_flashvdm', action='store_true')
     parser.add_argument('--compile', action='store_true')
     parser.add_argument('--low_vram_mode', action='store_true')
-    parser.add_argument('--profile', type=str, default="3")
     args = parser.parse_args()
     args.enable_flashvdm = True
 
@@ -697,8 +694,6 @@ if __name__ == '__main__':
             HAS_TEXTUREGEN = True
         except Exception as e:
             print(e)
-            import traceback
-            traceback.print_exc()
             print("Failed to load texture generator.")
             print('Please try to install requirements by following README.md')
             HAS_TEXTUREGEN = False
