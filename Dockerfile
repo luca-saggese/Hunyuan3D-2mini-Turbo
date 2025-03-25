@@ -51,7 +51,9 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     cd hy3dgen/texgen/differentiable_renderer && \
     bash compile_mesh_painter.sh
 
-RUN cd ../../../
+RUN pwd
+
+RUN cd ../../..
 
 COPY gradio_app.py /app
 
