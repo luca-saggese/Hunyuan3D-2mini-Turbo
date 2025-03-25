@@ -459,7 +459,17 @@ def build_app():
                             confirm_export = gr.Button(value="Transform", min_width=100)
                             #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
                             #file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
-                            file_export = gr.outputs.File(label="Download", type="file")
+                            file_export = gr.File(visible=False, label="Download")
+                            # download_btn = gr.Button("Download", variant="primary")
+    
+                            # # Componente File nascosto (visibile solo dopo il click)
+                            # file_export = gr.File(visible=False, label="Download")
+                            
+                            # # Colleghiamo il pulsante alla funzione che genera il file
+                            # download_btn.click(
+                            #     fn=generate_file,
+                            #     outputs=file_output
+                            # )
 
 
             with gr.Column(scale=6):
