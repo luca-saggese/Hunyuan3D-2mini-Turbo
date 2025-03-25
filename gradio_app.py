@@ -528,12 +528,12 @@ def build_app():
             ],
             outputs=[file_out, html_gen_mesh, stats, seed]
         ).then(
-            lambda: (gr.update(visible=True), gr.update(visible=False, value=False), gr.update(interactive=True), gr.update(interactive=True),
+            lambda: (gr.update(visible=False, value=False), gr.update(interactive=True), gr.update(interactive=True),
                      gr.update(interactive=False)),
-            outputs=[file_out, export_texture, reduce_face, confirm_export, file_export],
+            outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: (gr.update(visible=True),gr.update(selected='gen_mesh_panel')),
-            outputs=[file_out, tabs_output],
+            lambda: (gr.update(selected='gen_mesh_panel')),
+            outputs=[tabs_output],
         )
 
         btn_all.click(
@@ -555,12 +555,12 @@ def build_app():
             ],
             outputs=[file_out, file_out2, html_gen_mesh, stats, seed]
         ).then(
-            lambda: (gr.update(visible=True), gr.update(visible=True), gr.update(visible=True, value=True), gr.update(interactive=False), gr.update(interactive=True),
+            lambda: (gr.update(visible=True, value=True), gr.update(interactive=False), gr.update(interactive=True),
                      gr.update(interactive=False)),
-            outputs=[file_out, file_out2, export_texture, reduce_face, confirm_export, file_export],
+            outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
-            lambda: (gr.update(visible=True), gr.update(visible=True), gr.update(selected='gen_mesh_panel')),
-            outputs=[file_out, file_out2, tabs_output],
+            lambda: (gr.update(selected='gen_mesh_panel')),
+            outputs=[tabs_output],
         )
 
         def on_gen_mode_change(value):
@@ -590,7 +590,7 @@ def build_app():
             print(f'exporting {file_out}')
             print(f'reduce face to {target_face_num}')
             if export_texture:
-                mesh = trimesh.load(file_out2.name, file_type=file_type)
+                mesh = trimesh.load(file_out2.name, file_type='glb')
                 save_folder = gen_save_folder()
                 path = export_mesh(mesh, save_folder, textured=True, type=file_type)
 
@@ -600,7 +600,7 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=True)
             else:
-                mesh = trimesh.load(file_out.name, file_type=file_type)
+                mesh = trimesh.load(file_out.name, file_type='glb')
                 mesh = floater_remove_worker(mesh)
                 mesh = degenerate_face_remove_worker(mesh)
                 if reduce_face:
