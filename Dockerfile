@@ -28,7 +28,7 @@ RUN pip install --upgrade pip \
 RUN pip install -r /tmp/requirements.txt
 
 # Ora copia il resto del codice (non invalida il caching delle dipendenze)
-COPY --exlude=gradio_app.py . /app
+COPY [^g]* /app
 
 # Installa le dipendenze aggiuntive richieste
 RUN pip install gradio==3.39.0 sentencepiece
