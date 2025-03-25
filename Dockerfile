@@ -58,5 +58,6 @@ COPY --exclude=hy3dgen . /app
 EXPOSE 7860 
 
 # Comando di default per avviare il server Gradio
-CMD ["python3", "gradio_app.py", "--low_vram_mode", "--enable_t23d"]
+# "--enable_t23d"
+CMD ["python3", "gradio_app.py", "--low_vram_mode"] 
 
