@@ -133,7 +133,7 @@ def build_model_viewer_html(save_folder, height=660, width=790, textured=False):
 def load_t2i_worker():
     global t2i_worker, i23d_worker
     if i23d_worker:
-        i23d_worker.to('cpu')
+        #i23d_worker.to('cpu')
         del i23d_worker
         i23d_worker = None
         torch.cuda.empty_cache()
@@ -150,7 +150,7 @@ def load_t2i_worker():
 def load_i23d_worker():
     global t2i_worker, i23d_worker
     if t2i_worker:
-        t2i_worker.to('cpu')
+        #t2i_worker.to('cpu')
         del t2i_worker
         t2i_worker = None
         torch.cuda.empty_cache()
