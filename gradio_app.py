@@ -538,7 +538,7 @@ def build_app():
             ],
             outputs=[file_out, html_gen_mesh, stats, seed]
         ).then(
-            lambda: (gr.update(visible=False, value=False), gr.update(interactive=True), gr.update(interactive=True),
+            lambda: (gr.update(visible=True), gr.update(interactive=True), gr.update(interactive=True),
                      gr.update(interactive=False)),
             outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
@@ -565,7 +565,7 @@ def build_app():
             ],
             outputs=[file_out, file_out2, html_gen_mesh, stats, seed]
         ).then(
-            lambda: (gr.update(visible=True, value=True), gr.update(interactive=False), gr.update(interactive=True),
+            lambda: (gr.update(visible=True), gr.update(visible=True), gr.update(interactive=True),
                      gr.update(interactive=False)),
             outputs=[export_texture, reduce_face, confirm_export, file_export],
         ).then(
