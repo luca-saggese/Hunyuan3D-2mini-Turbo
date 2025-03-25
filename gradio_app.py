@@ -163,11 +163,11 @@ def load_i23d_worker():
             device=args.device,
         )
         if args.enable_flashvdm:
-            i23d_worker.enable_flashvdm(mc_algo='mc')
-        if args.low_vram_mode:
-            i23d_worker.to('cpu')
-        else:
-            i23d_worker.to('cuda')
+            mc_algo = 'mc' if args.device in ['cpu', 'mps'] else args.mc_algo
+            i23d_worker.enable_flashvdm(mc_algo=mc_algo)
+        if args.compile:
+            i23d_worker.compile()
+
     return i23d_worker
 
 #@spaces.GPU(duration=60)
@@ -255,7 +255,7 @@ def _gen_shape(
 
     generator = torch.Generator()
     generator = generator.manual_seed(int(seed))
-    #i23d_worker = load_i23d_worker()
+    i23d_worker = load_i23d_worker()
     outputs = i23d_worker(
         image=image,
         num_inference_steps=steps,
@@ -431,7 +431,7 @@ def build_app():
             with gr.Column(scale=3):
                 with gr.Tabs(selected='tab_img_prompt') as tabs_prompt:
                     with gr.Tab('Image Prompt', id='tab_img_prompt', visible=not MV_MODE) as tab_ip:
-                        image = gr.Image(label='Image', type='pil', image_mode='RGBA', height=512)
+                        image = gr.Image(label='Image', type='pil', image_mode='RGBA', height=289)
 
                     with gr.Tab('Text Prompt', id='tab_txt_prompt', visible=HAS_T2I and not MV_MODE) as tab_tp:
                         caption = gr.Textbox(label='Text Prompt',
