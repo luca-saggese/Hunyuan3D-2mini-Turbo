@@ -28,11 +28,11 @@ RUN pip install --upgrade pip \
 # Installa le dipendenze senza invalidare la cache quando il codice cambia
 RUN pip install -r /tmp/requirements.txt
 
-# Ora copia il resto del codice (non invalida il caching delle dipendenze)
-COPY --exclude=gradio_app.py . /app
-
 # Installa le dipendenze aggiuntive richieste
 RUN pip install gradio==3.39.0 sentencepiece
+
+# Ora copia il resto del codice (non invalida il caching delle dipendenze)
+COPY --exclude=gradio_app.py . /app
 
 # Imposta le variabili di ambiente per CUDA e Torch
 ENV CUDA_HOME=/usr/local/cuda
