@@ -140,10 +140,10 @@ def load_t2i_worker():
     if not t2i_worker:
         from hy3dgen.text2image import HunyuanDiTPipeline
         t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
-        if args.low_vram_mode:
-            t2i_worker.enable_model_cpu_offload()
-        else:
-            t2i_worker.to('cuda')
+        # if args.low_vram_mode:
+        #     t2i_worker.enable_model_cpu_offload()
+        # else:
+        #     t2i_worker.to('cuda')
     return t2i_worker
 
 
