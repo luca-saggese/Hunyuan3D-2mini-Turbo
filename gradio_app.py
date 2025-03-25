@@ -417,8 +417,8 @@ def build_app():
                                         min_width=100)
 
                 with gr.Group():
-                    file_out = gr.File(label="File", visible=False)
-                    file_out2 = gr.File(label="File", visible=False)
+                    file_out = gr.File(label="File", visible=False, file_types=["*"])
+                    file_out2 = gr.File(label="File", visible=False, file_types=["*"])
 
                 with gr.Tabs(selected='tab_options' if TURBO_MODE else 'tab_export'):
                     with gr.Tab("Options", id='tab_options', visible=TURBO_MODE):
@@ -463,7 +463,7 @@ def build_app():
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
                             #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
-                            file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100, file_types=["*"])
+                            file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
 
 
             with gr.Column(scale=6):
