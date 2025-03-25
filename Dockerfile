@@ -41,8 +41,8 @@ ENV LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 # Imposta TORCH_CUDA_ARCH_LIST per evitare errori di compilazione
 ENV TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;9.0"
 
-# Verifica che NVCC sia disponibile
-#RUN nvcc --version
+# Imposta la directory di cache Hugging Face
+ENV HF_HOME=/huggingface
 
 # Compila i moduli richiesti per la texture
 RUN cd hy3dgen/texgen/custom_rasterizer && \
