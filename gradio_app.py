@@ -594,7 +594,7 @@ def build_app():
             print(f'exporting {file_out}')
             print(f'reduce face to {target_face_num}')
             if export_texture:
-                mesh = trimesh.load(file_out2)
+                mesh = trimesh.load(file_out2.name, file_type=file_type)
                 save_folder = gen_save_folder()
                 path = export_mesh(mesh, save_folder, textured=True, type=file_type)
 
@@ -604,7 +604,7 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=True)
             else:
-                mesh = trimesh.load(file_out)
+                mesh = trimesh.load(file_out.name, file_type=file_type)
                 mesh = floater_remove_worker(mesh)
                 mesh = degenerate_face_remove_worker(mesh)
                 if reduce_face:
