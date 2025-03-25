@@ -462,8 +462,9 @@ def build_app():
                                                     label='Target Face Number')
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
-                            file_export = gr.DownloadButton(label="Download", variant='primary',
-                                                            interactive=False, min_width=100)
+                            #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
+                            file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100, file_types=["*"])
+
 
             with gr.Column(scale=6):
                 with gr.Tabs(selected='gen_mesh_panel') as tabs_output:
@@ -617,7 +618,8 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=False)
             print(f'export to {path}')
-            return model_viewer_html, gr.update(value=path, interactive=True)
+            return model_viewer_html, gr.update(value=path, interactive=True, visible=True)
+            
 
         confirm_export.click(
             lambda: gr.update(selected='export_mesh_panel'),
