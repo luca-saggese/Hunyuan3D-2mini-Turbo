@@ -26,7 +26,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uuid
-from mmgp import offload
+#from mmgp import offload
 
 from hy3dgen.shapegen.utils import logger
 

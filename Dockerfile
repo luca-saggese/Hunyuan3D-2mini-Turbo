@@ -51,6 +51,9 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     cd hy3dgen/texgen/differentiable_renderer && \
     bash compile_mesh_painter.sh
 
+#RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('tencent/Hunyuan3D-2', allow_patterns=['hunyuan3d-delight-v2-0/*'])"
+#RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('tencent/Hunyuan3D-2', allow_patterns=['hunyuan3d-paint-v2-0/*'])"
+
 # Ora copia il resto del codice (non invalida il caching delle dipendenze)
 COPY --exclude=hy3dgen . /app
 
