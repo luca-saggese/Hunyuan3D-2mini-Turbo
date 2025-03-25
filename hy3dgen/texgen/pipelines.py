@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 class Hunyuan3DTexGenConfig:
 
     def __init__(self, light_remover_ckpt_path, multiview_ckpt_path):
+        print("light_remover_ckpt_path", light_remover_ckpt_path, "multiview_ckpt_path", multiview_ckpt_path)
         self.device = 'cuda'
         self.light_remover_ckpt_path = light_remover_ckpt_path
         self.multiview_ckpt_path = multiview_ckpt_path
