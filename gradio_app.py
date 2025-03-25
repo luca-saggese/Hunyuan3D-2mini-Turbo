@@ -426,7 +426,7 @@ def build_app():
                     with gr.Tab('Advanced Options', id='tab_advanced_options'):
                         with gr.Row():
                             check_box_rembg = gr.Checkbox(value=True, label='Remove Background', min_width=100)
-                            randomize_seed = gr.Checkbox(label="Randomize seed", value=True, min_width=100)
+                            randomize_seed = gr.Checkbox(label="Randomize seed", value=False, min_width=100)
                         seed = gr.Slider(
                             label="Seed",
                             minimum=0,

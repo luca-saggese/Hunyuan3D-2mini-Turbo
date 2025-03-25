@@ -32,6 +32,8 @@ from hy3dgen.shapegen.utils import logger
 
 MAX_SEED = 1e7
 
+t2i_worker = None
+i23d_worker = None
 
 if False:
     import os
@@ -128,6 +130,46 @@ def build_model_viewer_html(save_folder, height=660, width=790, textured=False):
         </div>
     """
 
+def load_t2i_worker():
+    global t2i_worker, i23d_worker
+    if i23d_worker:
+        i23d_worker.to('cpu')
+        del i23d_worker
+        i23d_worker = None
+        torch.cuda.empty_cache()
+    if not t2i_worker:
+        from hy3dgen.text2image import HunyuanDiTPipeline
+        t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
+        if args.low_vram_mode:
+            t2i_worker.enable_model_cpu_offload()
+        else:
+            t2i_worker.to('cuda')
+    return t2i_worker
+
+
+def load_i23d_worker():
+    global t2i_worker, i23d_worker
+    if t2i_worker:
+        t2i_worker.to('cpu')
+        del t2i_worker
+        t2i_worker = None
+        torch.cuda.empty_cache()
+    if not i23d_worker:
+        from hy3dgen.shapegen import Hunyuan3DDiTFlowMatchingPipeline
+        i23d_worker = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained(
+            args.model_path,
+            subfolder=args.subfolder,
+            use_safetensors=True,
+            device=args.device,
+        )
+        if args.enable_flashvdm:
+            mc_algo = 'mc' if args.device in ['cpu', 'mps'] else args.mc_algo
+            i23d_worker.enable_flashvdm(mc_algo=mc_algo)
+        if args.compile:
+            i23d_worker.compile()
+
+    return i23d_worker
+
 #@spaces.GPU(duration=60)
 def _gen_shape(
     caption=None,
@@ -184,6 +226,7 @@ def _gen_shape(
     if image is None:
         start_time = time.time()
         try:
+            t2i_worker = load_t2i_worker()
             image = t2i_worker(caption)
         except Exception as e:
             raise gr.Error(f"Text to 3D is disable. Please enable it by `python gradio_app.py --enable_t23d`.")
@@ -212,6 +255,7 @@ def _gen_shape(
 
     generator = torch.Generator()
     generator = generator.manual_seed(int(seed))
+    i23d_worker = load_i23d_worker()
     outputs = i23d_worker(
         image=image,
         num_inference_steps=steps,
@@ -387,7 +431,7 @@ def build_app():
             with gr.Column(scale=3):
                 with gr.Tabs(selected='tab_img_prompt') as tabs_prompt:
                     with gr.Tab('Image Prompt', id='tab_img_prompt', visible=not MV_MODE) as tab_ip:
-                        image = gr.Image(label='Image', type='pil', image_mode='RGBA', height=512)
+                        image = gr.Image(label='Image', type='pil', image_mode='RGBA', height=289)
 
                     with gr.Tab('Text Prompt', id='tab_txt_prompt', visible=HAS_T2I and not MV_MODE) as tab_tp:
                         caption = gr.Textbox(label='Text Prompt',
@@ -705,7 +749,7 @@ if __name__ == '__main__':
     if args.enable_t23d:
         from hy3dgen.text2image import HunyuanDiTPipeline
 
-        t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
+        #t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
         HAS_T2I = True
 
     from hy3dgen.shapegen import FaceReducer, FloaterRemover, DegenerateFaceRemover, MeshSimplifier, \
