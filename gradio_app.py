@@ -291,8 +291,8 @@ def generation_all(
     if args.low_vram_mode:
         torch.cuda.empty_cache()
     return (
-        gr.update(value=path, file_types=["*"]),
-        gr.update(value=path_textured, file_types=["*"]),
+        gr.update(value=path),
+        gr.update(value=path_textured),
         model_viewer_html_textured,
         stats,
         seed,
@@ -338,7 +338,7 @@ def shape_generation(
     if args.low_vram_mode:
         torch.cuda.empty_cache()
     return (
-        gr.update(value=path, file_types=["*"]),
+        gr.update(value=path),
         model_viewer_html,
         stats,
         seed,
@@ -417,8 +417,8 @@ def build_app():
                                         min_width=100)
 
                 with gr.Group():
-                    file_out = gr.File(label="File", visible=False, file_types=["*"])
-                    file_out2 = gr.File(label="File", visible=False, file_types=["*"])
+                    file_out = gr.File(label="File", visible=False)
+                    file_out2 = gr.File(label="File", visible=False)
 
                 with gr.Tabs(selected='tab_options' if TURBO_MODE else 'tab_export'):
                     with gr.Tab("Options", id='tab_options', visible=TURBO_MODE):
