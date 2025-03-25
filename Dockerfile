@@ -51,7 +51,7 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     cd hy3dgen/texgen/differentiable_renderer && \
     bash compile_mesh_painter.sh
 
-RUN pwd
+RUN echo "=== DEBUG: Current path ===" && pwd && echo "=== Files ===" && ls -al
 
 RUN cd ../../..
 
