@@ -360,14 +360,9 @@ def build_app():
     {title}
     </div>
     <div align="center">
-    Tencent Hunyuan3D Team
+    Luca Saggese & Tencent Hunyuan3D Team
     </div>
-    <div align="center">
-      <a href="https://github.com/tencent/FlashVDM">Github</a> &ensp; 
-      <a href="https://3d.hunyuan.tencent.com">Hunyuan3D Studio</a> &ensp;
-      <a href="https://arxiv.org/abs/2503.16302">Technical Report</a> &ensp;
-      <a href="https://huggingface.co/tencent/Hunyuan3D-2mini/tree/main/hunyuan3d-dit-v2-mini-turbo"> Pretrained Models</a> &ensp;
-    </div>
+    
     """
     custom_css = """
     .app.svelte-wpkpf6.svelte-wpkpf6:not(.fill_width) {
@@ -463,7 +458,8 @@ def build_app():
                         with gr.Row():
                             confirm_export = gr.Button(value="Transform", min_width=100)
                             #file_export = gr.DownloadButton(label="Download", variant='primary', interactive=False, min_width=100)
-                            file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
+                            #file_export = gr.Button(label="Download", variant='primary', interactive=False, min_width=100)
+                            file_export = gr.outputs.File(label="Download", type="file")
 
 
             with gr.Column(scale=6):
@@ -583,7 +579,7 @@ def build_app():
             elif value == 'Standard':
                 return gr.update(value=256)
             else:
-                return gr.update(value=384)
+                return gr.update(value=512)
 
         decode_mode.change(on_decode_mode_change, inputs=[decode_mode], outputs=[octree_resolution])
 
