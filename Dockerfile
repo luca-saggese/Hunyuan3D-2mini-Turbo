@@ -51,9 +51,11 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     cd hy3dgen/texgen/differentiable_renderer && \
     bash compile_mesh_painter.sh
 
+COPY gradio_app.py /app
+
 # Espone la porta per Gradio
 EXPOSE 7860 
 
 # Comando di default per avviare il server Gradio
-CMD ["python3", "gradio_app.py"]
+CMD ["python3", "gradio_app.py", "low_vram_mode"]
 

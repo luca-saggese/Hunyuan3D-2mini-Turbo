@@ -35,6 +35,12 @@ It features two techniques for both VAE and DiT acceleration:
 
 ## How to Use?
 
+## Docker
+```
+docker build -t hunyuan-3d-turbo .
+docker run -it --gpus all -p 8080:7860 -v /home/lvx/huggingface:/huggingface hunyuan-3d-turbo
+```
+
 Visit **[Hunyuan3D-2](https://github.com/Tencent/Hunyuan3D-2)** to access the integration of FlashVDM with Hunyuan3D-2.
 
 ```diff
