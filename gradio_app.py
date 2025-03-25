@@ -411,9 +411,7 @@ def build_app():
                                         visible=HAS_TEXTUREGEN,
                                         min_width=100)
 
-                with gr.Group():
-                    file_out = gr.File(label="File", visible=False)
-                    file_out2 = gr.File(label="File", visible=False)
+
 
                 with gr.Tabs(selected='tab_options' if TURBO_MODE else 'tab_export'):
                     with gr.Tab("Options", id='tab_options', visible=TURBO_MODE):
@@ -470,6 +468,9 @@ def build_app():
                             #     fn=generate_file,
                             #     outputs=file_output
                             # )
+                with gr.Group():
+                    file_out = gr.File(label="File", visible=False)
+                    file_out2 = gr.File(label="File", visible=False)
 
 
             with gr.Column(scale=6):
