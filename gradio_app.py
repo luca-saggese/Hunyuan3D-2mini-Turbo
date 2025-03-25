@@ -291,8 +291,8 @@ def generation_all(
     if args.low_vram_mode:
         torch.cuda.empty_cache()
     return (
-        gr.update(value=path),
-        gr.update(value=path_textured),
+        gr.update(value=path, file_types=["*"]),
+        gr.update(value=path_textured, file_types=["*"]),
         model_viewer_html_textured,
         stats,
         seed,
@@ -338,7 +338,7 @@ def shape_generation(
     if args.low_vram_mode:
         torch.cuda.empty_cache()
     return (
-        gr.update(value=path),
+        gr.update(value=path, file_types=["*"]),
         model_viewer_html,
         stats,
         seed,
@@ -618,7 +618,7 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=False)
             print(f'export to {path}')
-            return model_viewer_html, gr.update(value=path, interactive=True, visible=True)
+            return model_viewer_html, gr.update(value=path, interactive=True, visible=True, file_types=["*"])
             
 
         confirm_export.click(
