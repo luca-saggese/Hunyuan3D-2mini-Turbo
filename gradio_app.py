@@ -618,7 +618,7 @@ def build_app():
                 model_viewer_html = build_model_viewer_html(save_folder, height=HTML_HEIGHT, width=HTML_WIDTH,
                                                             textured=False)
             print(f'export to {path}')
-            return model_viewer_html, gr.update(value=path, interactive=True, visible=True, file_types=["*"])
+            return model_viewer_html, gr.update(value=path, interactive=True, visible=True)
             
 
         confirm_export.click(
