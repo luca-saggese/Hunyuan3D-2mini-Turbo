@@ -31,9 +31,6 @@ RUN pip install -r /tmp/requirements.txt
 # Installa le dipendenze aggiuntive richieste
 RUN pip install gradio==3.39.0 sentencepiece
 
-# Ora copia il resto del codice (non invalida il caching delle dipendenze)
-COPY --exclude=gradio_app.py . /app
-
 # Imposta le variabili di ambiente per CUDA e Torch
 ENV CUDA_HOME=/usr/local/cuda
 ENV PATH="$CUDA_HOME/bin:$PATH"
@@ -45,6 +42,8 @@ ENV TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;9.0"
 # Imposta la directory di cache Hugging Face
 ENV HF_HOME=/huggingface
 
+COPY hy3dgen /app/hy3dgen
+
 # Compila i moduli richiesti per la texture
 RUN cd hy3dgen/texgen/custom_rasterizer && \
     python3 setup.py install && \
@@ -52,7 +51,8 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     cd hy3dgen/texgen/differentiable_renderer && \
     bash compile_mesh_painter.sh
 
-COPY gradio_app.py /app
+# Ora copia il resto del codice (non invalida il caching delle dipendenze)
+COPY . /app
 
 # Espone la porta per Gradio
 EXPOSE 7860 
