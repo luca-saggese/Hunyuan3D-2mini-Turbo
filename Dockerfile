@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7-labs
 # Usa un'immagine di base con Python 3.10
 FROM nvidia/cuda:12.2.0-devel-ubuntu22.04
 
@@ -28,7 +29,7 @@ RUN pip install --upgrade pip \
 RUN pip install -r /tmp/requirements.txt
 
 # Ora copia il resto del codice (non invalida il caching delle dipendenze)
-COPY [^g]* /app
+COPY --exlude=gradio_app.py . /app
 
 # Installa le dipendenze aggiuntive richieste
 RUN pip install gradio==3.39.0 sentencepiece
