@@ -28,7 +28,7 @@ RUN pip install --upgrade pip \
 RUN pip install -r /tmp/requirements.txt
 
 # Ora copia il resto del codice (non invalida il caching delle dipendenze)
-COPY . /app
+COPY --exlude=gradio_app.py . /app
 
 # Installa le dipendenze aggiuntive richieste
 RUN pip install gradio==3.39.0 sentencepiece
@@ -50,10 +50,6 @@ RUN cd hy3dgen/texgen/custom_rasterizer && \
     cd ../../.. && \
     cd hy3dgen/texgen/differentiable_renderer && \
     bash compile_mesh_painter.sh
-
-RUN echo "=== DEBUG: Current path ===" && pwd && echo "=== Files ===" && ls -al
-
-RUN cd ../../..
 
 COPY gradio_app.py /app
 
