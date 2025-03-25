@@ -32,6 +32,9 @@ from hy3dgen.shapegen.utils import logger
 
 MAX_SEED = 1e7
 
+t2i_worker = None
+i23d_worker = None
+
 if False:
     import os
     import spaces
@@ -127,6 +130,46 @@ def build_model_viewer_html(save_folder, height=660, width=790, textured=False):
         </div>
     """
 
+def load_t2i_worker():
+    global t2i_worker, i23d_worker
+    if i23d_worker:
+        i23d_worker.to('cpu')
+        del i23d_worker
+        i23d_worker = None
+        torch.cuda.empty_cache()
+    if not t2i_worker:
+        from hy3dgen.text2image import HunyuanDiTPipeline
+        t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
+        if args.low_vram_mode:
+            t2i_worker.enable_model_cpu_offload()
+        else:
+            t2i_worker.to('cuda')
+    return t2i_worker
+
+
+def load_i23d_worker():
+    global t2i_worker, i23d_worker
+    if t2i_worker:
+        t2i_worker.to('cpu')
+        del t2i_worker
+        t2i_worker = None
+        torch.cuda.empty_cache()
+    if not i23d_worker:
+        from hy3dgen.shapegen import Hunyuan3DDiTFlowMatchingPipeline
+        i23d_worker = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained(
+            args.model_path,
+            subfolder=args.subfolder,
+            use_safetensors=True,
+            device=args.device,
+        )
+        if args.enable_flashvdm:
+            i23d_worker.enable_flashvdm(mc_algo='mc')
+        if args.low_vram_mode:
+            i23d_worker.to('cpu')
+        else:
+            i23d_worker.to('cuda')
+    return i23d_worker
+
 #@spaces.GPU(duration=60)
 def _gen_shape(
     caption=None,
@@ -183,6 +226,7 @@ def _gen_shape(
     if image is None:
         start_time = time.time()
         try:
+            t2i_worker = load_t2i_worker()
             image = t2i_worker(caption)
         except Exception as e:
             raise gr.Error(f"Text to 3D is disable. Please enable it by `python gradio_app.py --enable_t23d`.")
@@ -211,6 +255,7 @@ def _gen_shape(
 
     generator = torch.Generator()
     generator = generator.manual_seed(int(seed))
+    i23d_worker = load_i23d_worker()
     outputs = i23d_worker(
         image=image,
         num_inference_steps=steps,
@@ -704,7 +749,7 @@ if __name__ == '__main__':
     if args.enable_t23d:
         from hy3dgen.text2image import HunyuanDiTPipeline
 
-        t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
+        #t2i_worker = HunyuanDiTPipeline('Tencent-Hunyuan/HunyuanDiT-v1.1-Diffusers-Distilled')
         HAS_T2I = True
 
     from hy3dgen.shapegen import FaceReducer, FloaterRemover, DegenerateFaceRemover, MeshSimplifier, \
