@@ -440,7 +440,7 @@ def build_app():
                                                   minimum=1,
                                                   value=5 if 'turbo' in args.subfolder else 30,
                                                   step=1, label='Inference Steps')
-                            octree_resolution = gr.Slider(maximum=512, minimum=16, value=256, label='Octree Resolution')
+                            octree_resolution = gr.Slider(maximum=1024, minimum=16, value=256, label='Octree Resolution')
                         with gr.Row():
                             cfg_scale = gr.Number(value=5.0, label='Guidance Scale', min_width=100)
                             num_chunks = gr.Slider(maximum=5000000, minimum=1000, value=8000,
